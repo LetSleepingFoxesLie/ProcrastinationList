@@ -1,3 +1,5 @@
+from logger import Logger
+
 class Task:
     
     counter = 0
@@ -13,6 +15,7 @@ class Task:
     def mark_as_completed(self):
         if not self.is_completed:
             self.is_completed = True
+            Logger.log(f"Marked task \"{self.title}\" (ID: {self.task_id}) as completed.")
         else:
             return
     

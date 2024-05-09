@@ -1,5 +1,6 @@
 from task_list import TaskList
 from task import Task
+from logger import Logger
 
 print("Initialized PROCRASTIONATION LIST!")
 print(">> Your usual \"To-do list\", but terrible!")
@@ -14,7 +15,7 @@ def get_help() -> None:
     print(">> r(emove) <id>: Removes a task by its given ID")
     print(">> c(omplete) <id>: Marks task its given ID as completed")
     print(">> g(et) <id>: Gets the task by its current ID")
-    print(">> l(ist) [c(ompleted)|u(ncompleted)]: Lists all tasks if no argument is given, and completed/uncompleted ones depending on given argument")
+    print(">> l(ist) [c(ompleted)|i(ncomplete)]: Lists all tasks if no argument is given, and completed/incomplete ones depending on given argument")
     
 
 get_help()
@@ -43,13 +44,18 @@ while True:
             task_list.add_task_to_list(
                 Task(title, description)
             )
-            # To-do: add some logging/error tools for later?
             
         case "r" | "remove":
+            if len(command) != 2:
+                Logger.error("Wrong number of arguments!")
+                continue
             id = command[1]
             task_list.remove_task_from_list(id)
             
         case "c" | "complete":
+            if len(command) != 2:
+                Logger.error("Wrong number of arguments!")
+                continue
             id = command[1]
             task = task_list.get_task_by_id(id)
             if task is None:
@@ -57,6 +63,9 @@ while True:
             task.mark_as_completed()
             
         case "g" | "get":
+            if len(command) != 2:
+                Logger.error("Wrong number of arguments!")
+                continue
             id = command[1]
             task = task_list.get_task_by_id(id)
             if task is None:
@@ -67,18 +76,18 @@ while True:
             if len(command) == 1:
                 task_list.print_tasks()
             elif len(command) == 2:
-                match command[2].lower():
+                match command[1].lower():
                     case "c" | "completed":
                         task_list.print_completed_tasks()
-                    case "u" | "uncompleted":
-                        task_list.print_uncompleted_tasks()
+                    case "i" | "incomplete":
+                        task_list.print_incomplete_tasks()
                     case _:
-                        print("[ERROR] Wrong arguments! Check the HELP command for the correct usage")
+                        Logger.error("Wrong arguments! Check the HELP command for the correct usage")
             else:
-                print("[ERROR] Wrong number of arguments!")
+                Logger.error("Wrong number of arguments!")
                 
         case _:
-            print("[ERROR] Wrong command! Check the HELP command for the correct usage")
+            Logger.error("Wrong command! Check the HELP command for the correct usage")
             
         
 print("Finalized PROCRASTIONATION LIST!")
