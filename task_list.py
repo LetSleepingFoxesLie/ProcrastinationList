@@ -79,7 +79,7 @@ class TaskList:
 
         try:
             with open(file_name, "w") as f:
-                f.write(f"Title,Description,Is completed?") # ID is irrelevant
+                f.write(f"Title,Description,Is completed?\n") # ID is irrelevant
                 for task in self.tasks:
                     f.write(f"{task.title},{task.description},{task.is_completed}\n")
                 Logger.log(f"Saved tasks to file {file_name}")
