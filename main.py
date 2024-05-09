@@ -16,6 +16,8 @@ def get_help() -> None:
     print(">> c(omplete) <id>: Marks task its given ID as completed")
     print(">> g(et) <id>: Gets the task by its current ID")
     print(">> l(ist) [c(ompleted)|i(ncomplete)]: Lists all tasks if no argument is given, and completed/incomplete ones depending on given argument")
+    print(">> s(ave) <file_name>: Saves current list of tasks in a .csv file")
+    print(">> f(etch) <file_name>: Loads list of tasks from a .csv file. Alias: load")
     
 
 get_help()
@@ -85,6 +87,24 @@ while True:
                         Logger.error("Wrong arguments! Check the HELP command for the correct usage")
             else:
                 Logger.error("Wrong number of arguments!")
+            
+        case "s" | "save":
+            if len(command) != 2:
+                Logger.error("Wrong number of arguments!")
+                continue
+            if ".csv" != command[1][-4:] and len(command[1]) <= 5:
+                Logger.error("Wrong file format! It must be a .csv")
+                continue
+            task_list.save_tasks_to_csv(command[1])
+            
+        case "f" | "fetch" | "load":
+            if len(command) != 2:
+                Logger.error("Wrong number of arguments!")
+                continue
+            if ".csv" != command[1][-4:] and len(command[1]) <= 5:
+                Logger.error("Wrong file format! It must be a .csv")
+                continue
+            task_list.load_tasks_from_csv(command[1])
                 
         case _:
             Logger.error("Wrong command! Check the HELP command for the correct usage")

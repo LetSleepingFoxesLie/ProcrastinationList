@@ -4,7 +4,7 @@ class Task:
     
     counter = 0
     
-    def __init__(self, title, description):
+    def __init__(self, title: str, description: str, completed: bool = False):
         self.task_id = Task.counter
         self.title = title
         self.description = description

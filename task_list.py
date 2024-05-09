@@ -31,7 +31,7 @@ class TaskList:
         
         incomplete_tasks = list()
         for t in self.tasks:
-            if t.is_completed:
+            if not t.is_completed:
                 incomplete_tasks.append(t)
                 
         if len(incomplete_tasks) == 0:
@@ -59,9 +59,58 @@ class TaskList:
                 print(t)
 
     def get_task_by_id(self, id: int) -> Task:
+        try:
+            id = int(id)
+        except ValueError:
+            Logger.error("ID must be a number!")
+            return
+        
         for t in self.tasks:
             if t.task_id == id:
                 Logger.log(f"Found task with id {id}!")
                 return t
         print(f"[ERROR] Task with ID {id} has not been found!")
         return None
+    
+    def save_tasks_to_csv(self, file_name: str) -> None:
+        if len(self.tasks) == 0:
+            Logger.error("List of tasks is empty! Cannot continue.")
+            return
+
+        try:
+            with open(file_name, "w") as f:
+                f.write(f"Title,Description,Is completed?") # ID is irrelevant
+                for task in self.tasks:
+                    f.write(f"{task.title},{task.description},{task.is_completed}\n")
+                Logger.log(f"Saved tasks to file {file_name}")
+        except FileExistsError:
+            Logger.error("File name already exists!")
+        finally:
+            return
+        
+    def load_tasks_from_csv(self, file_name: str) -> None:
+        # I know I should be using the csv library, but this project is so barebones I don't feel the need...
+        try:
+            with open(file_name, "r") as f:
+                lines = f.readlines()[1:] # Pruning the first line since it's technically useless for our purposes
+                
+                # Wipe current task list
+                self.tasks = list()
+                Task.counter = 0
+                
+                # Generating tasks from each line
+                for line in lines:
+                    arguments = line.split(",")
+                    self.add_task_to_list(
+                        Task(
+                            title = arguments[0], 
+                            description = arguments[1],
+                            completed = arguments[2]
+                        )
+                    )
+                    
+                Logger.log(f"Loaded tasks from file {file_name}")
+        except FileNotFoundError:
+            Logger.error("File not found! Make sure you entered the correct file name.")
+        finally:
+            return
