@@ -40,8 +40,8 @@ while True:
             get_help()
             
         case "a" | "add":
-            title = input(">> Insert task title: ")
-            description = input(">> Insert task description: ")
+            title = input(">> Insert task title (please no ','): ")
+            description = input(">> Insert task description (please no ','): ")
             
             task_list.add_task_to_list(
                 Task(title, description)
